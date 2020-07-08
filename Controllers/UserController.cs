@@ -6,26 +6,33 @@ using BookingTickets.Models;
 using System.Collections.Generic;
 using System.Linq;
 using BookingTickets.Data;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
+using BookingTickets.Services;
 
 namespace BookingTickets.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : BaseController<User, UserRepository>
     {
         //private readonly BookingTicketsContext _context;
-
-        public UserController(UserRepository repository) : base(repository)
+        private readonly IUserService _userService;
+        public UserController(UserRepository repository, IUserService userService) : base(repository)
         {
-            
+            this._userService = userService;
         }
 
-        [AllowAnonymus]
+        [AllowAnonymous]
         [HttpPost("authenticate")]
-        public IAsyncResult Authenticate([FromBody]AuthenticateRequest model)
-        {
-            
+        public IActionResult Authenticate([FromBody]AuthenticateRequest model){
+            var response = _userService.Authenticate(model);
+
+            if(response == null)
+                return BadRequest(new {message = "Email or password is incorrect"});
+
+            return Ok(response);
         }
 
         /*[HttpPost]

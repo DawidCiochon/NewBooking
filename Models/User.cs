@@ -24,7 +24,7 @@ namespace BookingTickets.Models
 
         [Required]
         [DataType(DataType.Password)]
-        [MinLength(8, ErrorMessage="Password must be longer than 3 signs")]
+        [MinLength(8, ErrorMessage="Password must be longer than 8 signs")]
         public string Password {get; set;}
         public UserType userType {get; set;}
         public ICollection<Reservation> Reservations {get; set;}
